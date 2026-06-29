@@ -16,6 +16,8 @@ public partial class Form1 : Form
     public Form1()
     {
         InitializeComponent();
+        InitializeAttachments();
+        InitializeWhatsAppImport();
         WireValidationClearHandlers();
         Load += (_, _) => AdjustResponsiveLayout();
         Resize += (_, _) => AdjustResponsiveLayout();
@@ -80,26 +82,25 @@ public partial class Form1 : Form
 
     private async void btnSend_Click(object sender, EventArgs e)
     {
-        if (!TryBuildRequest(out var settings, out var recipients, out var subject, out var body, out var error))
+        if (!TryBuildRequest(out var settings, out var email, out var error))
         {
             statusBanner.SetStatus(StatusKind.Error, error);
             return;
         }
 
-        await SendEmailAsync(settings, recipients, subject, body);
+        await SendEmailAsync(settings, email);
     }
 
     private bool TryBuildRequest(
         out SmtpSettings settings,
-        out IReadOnlyList<string> recipients,
-        out string subject,
-        out string body,
+        out EmailMessage email,
         out string error)
     {
         settings = null!;
-        recipients = [];
-        subject = string.Empty;
-        body = string.Empty;
+        email = null!;
+        var recipients = (IReadOnlyList<string>)[];
+        var subject = string.Empty;
+        var body = string.Empty;
         error = string.Empty;
 
         ClearAllFieldErrors();
@@ -189,6 +190,9 @@ public partial class Form1 : Form
             return false;
         }
 
+        if (!TryValidateAttachments(out error))
+            return false;
+
         settings = new SmtpSettings
         {
             Server = txtSmtpServer.Text.Trim(),
@@ -200,24 +204,35 @@ public partial class Form1 : Form
 
         subject = txtSubject.Text.Trim();
         body = txtBody.Text;
+        email = new EmailMessage
+        {
+            Subject = subject,
+            Body = body,
+            To = recipients,
+            AttachmentPaths = GetAttachmentPaths()
+        };
         return true;
     }
 
-    private async Task SendEmailAsync(
-        SmtpSettings settings,
-        IReadOnlyList<string> recipients,
-        string subject,
-        string body)
+    private async Task SendEmailAsync(SmtpSettings settings, EmailMessage email)
     {
         ToggleSendingState(true);
-        statusBanner.SetStatus(StatusKind.Sending, "Sending email to recipients...");
+        var attachmentCount = email.AttachmentPaths.Count;
+        statusBanner.SetStatus(
+            StatusKind.Sending,
+            attachmentCount > 0
+                ? $"Sending email with {attachmentCount} attachment(s)..."
+                : "Sending email to recipients...");
 
         try
         {
-            await _emailService.SendAsync(settings, subject, body, recipients);
+            await _emailService.SendAsync(settings, email);
+            var attachmentText = attachmentCount > 0
+                ? $" with {attachmentCount} attachment(s)"
+                : string.Empty;
             statusBanner.SetStatus(
                 StatusKind.Success,
-                $"Success — email sent to {recipients.Count} recipient(s).");
+                $"Success — email sent to {email.To.Count} recipient(s){attachmentText}.");
         }
         catch (Exception ex)
         {
@@ -258,6 +273,7 @@ public partial class Form1 : Form
         ClearFieldError(lblErrRecipients);
         ClearFieldError(lblErrSubject);
         ClearFieldError(lblErrBody);
+        ClearFieldError(lblErrAttachments);
     }
 
     private static bool IsValidEmail(string email)

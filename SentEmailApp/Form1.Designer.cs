@@ -42,13 +42,32 @@ partial class Form1
         txtPassword = new TextBox();
         lblErrPassword = new Label();
         chkUseSslTls = new CheckBox();
+        panelAttachments = new Panel();
+        panelAttachmentsHeader = new Panel();
+        panelAttachmentButtons = new FlowLayoutPanel();
+        btnAddFiles = new Button();
+        btnRemoveSelected = new Button();
+        btnClearAttachments = new Button();
+        listViewAttachments = new ListView();
+        lblAttachmentCount = new Label();
+        lblAttachmentsTitle = new Label();
+        lblErrAttachments = new Label();
         cardMessage = new CardPanel();
         headerMessage = new Panel();
         lblMessageTitle = new Label();
         lblMessageIcon = new Label();
         layoutMessage = new TableLayoutPanel();
         panelRecipients = new Panel();
+        panelRecipientsHeader = new Panel();
         lblRecipients = new Label();
+        panelWhatsAppImport = new Panel();
+        panelWhatsAppToolbar = new FlowLayoutPanel();
+        btnImportWhatsApp = new Button();
+        chkWhatsAppRemoveDuplicates = new CheckBox();
+        chkWhatsAppAppendRecipients = new CheckBox();
+        panelWhatsAppStatus = new Panel();
+        lblWhatsAppFileName = new Label();
+        lblWhatsAppEmailCount = new Label();
         txtRecipients = new TextBox();
         lblErrRecipients = new Label();
         panelSubject = new Panel();
@@ -77,10 +96,17 @@ partial class Form1
         ((System.ComponentModel.ISupportInitialize)numPort).BeginInit();
         panelSenderEmail.SuspendLayout();
         panelPassword.SuspendLayout();
+        panelAttachments.SuspendLayout();
+        panelAttachmentsHeader.SuspendLayout();
+        panelAttachmentButtons.SuspendLayout();
         cardMessage.SuspendLayout();
         headerMessage.SuspendLayout();
         layoutMessage.SuspendLayout();
         panelRecipients.SuspendLayout();
+        panelRecipientsHeader.SuspendLayout();
+        panelWhatsAppImport.SuspendLayout();
+        panelWhatsAppToolbar.SuspendLayout();
+        panelWhatsAppStatus.SuspendLayout();
         panelSubject.SuspendLayout();
         panelBody.SuspendLayout();
         panelFooter.SuspendLayout();
@@ -161,6 +187,7 @@ partial class Form1
         // 
         // cardSmtp
         // 
+        cardSmtp.Controls.Add(panelAttachments);
         cardSmtp.Controls.Add(layoutSmtp);
         cardSmtp.Controls.Add(headerSmtp);
         cardSmtp.Dock = DockStyle.Fill;
@@ -407,9 +434,121 @@ partial class Form1
         chkUseSslTls.TabIndex = 4;
         chkUseSslTls.Text = "Enable SSL/TLS";
         chkUseSslTls.UseVisualStyleBackColor = true;
-        // 
+        //
+        // panelAttachments
+        //
+        panelAttachments.Controls.Add(listViewAttachments);
+        panelAttachments.Controls.Add(lblErrAttachments);
+        panelAttachments.Controls.Add(panelAttachmentButtons);
+        panelAttachments.Controls.Add(panelAttachmentsHeader);
+        panelAttachments.Dock = DockStyle.Fill;
+        panelAttachments.Location = new Point(14, 240);
+        panelAttachments.Name = "panelAttachments";
+        panelAttachments.Padding = new Padding(0, 8, 0, 0);
+        panelAttachments.Size = new Size(430, 362);
+        panelAttachments.TabIndex = 2;
+        //
+        // panelAttachmentsHeader
+        //
+        panelAttachmentsHeader.Controls.Add(lblAttachmentCount);
+        panelAttachmentsHeader.Controls.Add(lblAttachmentsTitle);
+        panelAttachmentsHeader.Dock = DockStyle.Top;
+        panelAttachmentsHeader.Location = new Point(0, 8);
+        panelAttachmentsHeader.Name = "panelAttachmentsHeader";
+        panelAttachmentsHeader.Size = new Size(430, 22);
+        panelAttachmentsHeader.TabIndex = 0;
+        //
+        // lblAttachmentsTitle
+        //
+        lblAttachmentsTitle.AutoSize = true;
+        lblAttachmentsTitle.Font = UiTheme.LabelFont;
+        lblAttachmentsTitle.ForeColor = UiTheme.TextSecondary;
+        lblAttachmentsTitle.Location = new Point(0, 2);
+        lblAttachmentsTitle.Name = "lblAttachmentsTitle";
+        lblAttachmentsTitle.Size = new Size(78, 16);
+        lblAttachmentsTitle.TabIndex = 0;
+        lblAttachmentsTitle.Text = "Attachments";
+        //
+        // lblAttachmentCount
+        //
+        lblAttachmentCount.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        lblAttachmentCount.Font = UiTheme.HintFont;
+        lblAttachmentCount.ForeColor = UiTheme.TextMuted;
+        lblAttachmentCount.Location = new Point(230, 3);
+        lblAttachmentCount.Name = "lblAttachmentCount";
+        lblAttachmentCount.Size = new Size(200, 15);
+        lblAttachmentCount.TabIndex = 1;
+        lblAttachmentCount.Text = "No files attached";
+        lblAttachmentCount.TextAlign = ContentAlignment.TopRight;
+        //
+        // panelAttachmentButtons
+        //
+        panelAttachmentButtons.Controls.Add(btnAddFiles);
+        panelAttachmentButtons.Controls.Add(btnRemoveSelected);
+        panelAttachmentButtons.Controls.Add(btnClearAttachments);
+        panelAttachmentButtons.Dock = DockStyle.Top;
+        panelAttachmentButtons.Location = new Point(0, 30);
+        panelAttachmentButtons.Name = "panelAttachmentButtons";
+        panelAttachmentButtons.Padding = new Padding(0, 0, 0, 6);
+        panelAttachmentButtons.Size = new Size(430, 34);
+        panelAttachmentButtons.TabIndex = 2;
+        panelAttachmentButtons.WrapContents = false;
+        //
+        // btnAddFiles
+        //
+        btnAddFiles.AutoSize = true;
+        btnAddFiles.Margin = new Padding(0, 0, 6, 0);
+        btnAddFiles.Name = "btnAddFiles";
+        btnAddFiles.Size = new Size(68, 28);
+        btnAddFiles.TabIndex = 0;
+        btnAddFiles.Text = "Add Files";
+        btnAddFiles.UseVisualStyleBackColor = true;
+        UiTheme.StyleSecondaryButton(btnAddFiles);
+        //
+        // btnRemoveSelected
+        //
+        btnRemoveSelected.AutoSize = true;
+        btnRemoveSelected.Enabled = false;
+        btnRemoveSelected.Margin = new Padding(0, 0, 6, 0);
+        btnRemoveSelected.Name = "btnRemoveSelected";
+        btnRemoveSelected.Size = new Size(104, 28);
+        btnRemoveSelected.TabIndex = 1;
+        btnRemoveSelected.Text = "Remove Selected";
+        btnRemoveSelected.UseVisualStyleBackColor = true;
+        UiTheme.StyleSecondaryButton(btnRemoveSelected);
+        //
+        // btnClearAttachments
+        //
+        btnClearAttachments.AutoSize = true;
+        btnClearAttachments.Enabled = false;
+        btnClearAttachments.Margin = new Padding(0);
+        btnClearAttachments.Name = "btnClearAttachments";
+        btnClearAttachments.Size = new Size(62, 28);
+        btnClearAttachments.TabIndex = 2;
+        btnClearAttachments.Text = "Clear All";
+        btnClearAttachments.UseVisualStyleBackColor = true;
+        UiTheme.StyleSecondaryButton(btnClearAttachments);
+        //
+        // listViewAttachments
+        //
+        listViewAttachments.Dock = DockStyle.Fill;
+        listViewAttachments.Location = new Point(0, 64);
+        listViewAttachments.Name = "listViewAttachments";
+        listViewAttachments.Size = new Size(430, 283);
+        listViewAttachments.TabIndex = 3;
+        //
+        // lblErrAttachments
+        //
+        lblErrAttachments.Dock = DockStyle.Bottom;
+        UiTheme.StyleErrorLabel(lblErrAttachments);
+        lblErrAttachments.Location = new Point(0, 347);
+        lblErrAttachments.Name = "lblErrAttachments";
+        lblErrAttachments.Padding = new Padding(0, 4, 0, 0);
+        lblErrAttachments.Size = new Size(430, 15);
+        lblErrAttachments.TabIndex = 4;
+        //
         // cardMessage
-        // 
+        //
         cardMessage.Controls.Add(layoutMessage);
         cardMessage.Controls.Add(headerMessage);
         cardMessage.Dock = DockStyle.Fill;
@@ -470,15 +609,25 @@ partial class Form1
         // 
         // panelRecipients
         // 
-        panelRecipients.Controls.Add(lblErrRecipients);
         panelRecipients.Controls.Add(txtRecipients);
-        panelRecipients.Controls.Add(lblRecipients);
+        panelRecipients.Controls.Add(lblErrRecipients);
+        panelRecipients.Controls.Add(panelWhatsAppImport);
+        panelRecipients.Controls.Add(panelRecipientsHeader);
         panelRecipients.Dock = DockStyle.Fill;
         panelRecipients.Location = new Point(0, 0);
         panelRecipients.Margin = new Padding(0, 0, 0, 6);
         panelRecipients.Name = "panelRecipients";
         panelRecipients.Size = new Size(668, 162);
         panelRecipients.TabIndex = 0;
+        // 
+        // panelRecipientsHeader
+        // 
+        panelRecipientsHeader.Controls.Add(lblRecipients);
+        panelRecipientsHeader.Dock = DockStyle.Top;
+        panelRecipientsHeader.Location = new Point(0, 0);
+        panelRecipientsHeader.Name = "panelRecipientsHeader";
+        panelRecipientsHeader.Size = new Size(668, 18);
+        panelRecipientsHeader.TabIndex = 0;
         // 
         // lblRecipients
         // 
@@ -489,26 +638,121 @@ partial class Form1
         lblRecipients.TabIndex = 0;
         lblRecipients.Text = "Recipients";
         // 
+        // panelWhatsAppImport
+        // 
+        panelWhatsAppImport.Controls.Add(panelWhatsAppStatus);
+        panelWhatsAppImport.Controls.Add(panelWhatsAppToolbar);
+        panelWhatsAppImport.Dock = DockStyle.Top;
+        panelWhatsAppImport.Location = new Point(0, 18);
+        panelWhatsAppImport.Name = "panelWhatsAppImport";
+        panelWhatsAppImport.Padding = new Padding(0, 2, 0, 6);
+        panelWhatsAppImport.Size = new Size(668, 58);
+        panelWhatsAppImport.TabIndex = 1;
+        // 
+        // panelWhatsAppToolbar
+        // 
+        panelWhatsAppToolbar.Controls.Add(btnImportWhatsApp);
+        panelWhatsAppToolbar.Controls.Add(chkWhatsAppRemoveDuplicates);
+        panelWhatsAppToolbar.Controls.Add(chkWhatsAppAppendRecipients);
+        panelWhatsAppToolbar.Dock = DockStyle.Top;
+        panelWhatsAppToolbar.Location = new Point(0, 2);
+        panelWhatsAppToolbar.Name = "panelWhatsAppToolbar";
+        panelWhatsAppToolbar.Size = new Size(668, 32);
+        panelWhatsAppToolbar.TabIndex = 0;
+        panelWhatsAppToolbar.WrapContents = false;
+        // 
+        // btnImportWhatsApp
+        // 
+        btnImportWhatsApp.AutoSize = true;
+        btnImportWhatsApp.Margin = new Padding(0, 0, 8, 0);
+        btnImportWhatsApp.Name = "btnImportWhatsApp";
+        btnImportWhatsApp.Size = new Size(136, 28);
+        btnImportWhatsApp.TabIndex = 0;
+        btnImportWhatsApp.Text = "Import WhatsApp Chat";
+        btnImportWhatsApp.UseVisualStyleBackColor = true;
+        UiTheme.StyleSecondaryButton(btnImportWhatsApp);
+        // 
+        // chkWhatsAppRemoveDuplicates
+        // 
+        chkWhatsAppRemoveDuplicates.AutoSize = true;
+        chkWhatsAppRemoveDuplicates.Checked = true;
+        chkWhatsAppRemoveDuplicates.CheckState = CheckState.Checked;
+        chkWhatsAppRemoveDuplicates.Font = UiTheme.HintFont;
+        chkWhatsAppRemoveDuplicates.ForeColor = UiTheme.TextSecondary;
+        chkWhatsAppRemoveDuplicates.Margin = new Padding(0, 6, 12, 0);
+        chkWhatsAppRemoveDuplicates.Name = "chkWhatsAppRemoveDuplicates";
+        chkWhatsAppRemoveDuplicates.Size = new Size(141, 20);
+        chkWhatsAppRemoveDuplicates.TabIndex = 1;
+        chkWhatsAppRemoveDuplicates.Text = "Remove duplicate emails";
+        chkWhatsAppRemoveDuplicates.UseVisualStyleBackColor = true;
+        // 
+        // chkWhatsAppAppendRecipients
+        // 
+        chkWhatsAppAppendRecipients.AutoSize = true;
+        chkWhatsAppAppendRecipients.Font = UiTheme.HintFont;
+        chkWhatsAppAppendRecipients.ForeColor = UiTheme.TextSecondary;
+        chkWhatsAppAppendRecipients.Margin = new Padding(0, 6, 0, 0);
+        chkWhatsAppAppendRecipients.Name = "chkWhatsAppAppendRecipients";
+        chkWhatsAppAppendRecipients.Size = new Size(168, 20);
+        chkWhatsAppAppendRecipients.TabIndex = 2;
+        chkWhatsAppAppendRecipients.Text = "Append to current recipients";
+        chkWhatsAppAppendRecipients.UseVisualStyleBackColor = true;
+        // 
+        // panelWhatsAppStatus
+        // 
+        panelWhatsAppStatus.Controls.Add(lblWhatsAppEmailCount);
+        panelWhatsAppStatus.Controls.Add(lblWhatsAppFileName);
+        panelWhatsAppStatus.Dock = DockStyle.Top;
+        panelWhatsAppStatus.Location = new Point(0, 34);
+        panelWhatsAppStatus.Name = "panelWhatsAppStatus";
+        panelWhatsAppStatus.Size = new Size(668, 18);
+        panelWhatsAppStatus.TabIndex = 1;
+        // 
+        // lblWhatsAppFileName
+        // 
+        lblWhatsAppFileName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        lblWhatsAppFileName.AutoEllipsis = true;
+        lblWhatsAppFileName.Font = UiTheme.HintFont;
+        lblWhatsAppFileName.ForeColor = UiTheme.TextMuted;
+        lblWhatsAppFileName.Location = new Point(0, 1);
+        lblWhatsAppFileName.Name = "lblWhatsAppFileName";
+        lblWhatsAppFileName.Size = new Size(430, 15);
+        lblWhatsAppFileName.TabIndex = 0;
+        lblWhatsAppFileName.Text = "No file selected";
+        // 
+        // lblWhatsAppEmailCount
+        // 
+        lblWhatsAppEmailCount.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        lblWhatsAppEmailCount.Font = UiTheme.HintFont;
+        lblWhatsAppEmailCount.ForeColor = UiTheme.TextMuted;
+        lblWhatsAppEmailCount.Location = new Point(438, 1);
+        lblWhatsAppEmailCount.Name = "lblWhatsAppEmailCount";
+        lblWhatsAppEmailCount.Size = new Size(230, 15);
+        lblWhatsAppEmailCount.TabIndex = 1;
+        lblWhatsAppEmailCount.Text = "0 emails extracted";
+        lblWhatsAppEmailCount.TextAlign = ContentAlignment.TopRight;
+        // 
         // txtRecipients
         // 
         txtRecipients.AcceptsReturn = true;
-        txtRecipients.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-        txtRecipients.Location = new Point(0, 18);
+        txtRecipients.Dock = DockStyle.Fill;
+        txtRecipients.Location = new Point(0, 76);
         txtRecipients.Multiline = true;
         txtRecipients.Name = "txtRecipients";
         txtRecipients.PlaceholderText = "user1@example.com, user2@example.com  — comma, semicolon, or new line";
-        txtRecipients.Size = new Size(668, 128);
-        txtRecipients.TabIndex = 1;
+        txtRecipients.Size = new Size(668, 71);
+        txtRecipients.TabIndex = 2;
         UiTheme.StyleInput(txtRecipients, true);
         // 
         // lblErrRecipients
         // 
-        lblErrRecipients.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+        lblErrRecipients.Dock = DockStyle.Bottom;
         UiTheme.StyleErrorLabel(lblErrRecipients);
         lblErrRecipients.Location = new Point(0, 147);
         lblErrRecipients.Name = "lblErrRecipients";
+        lblErrRecipients.Padding = new Padding(0, 4, 0, 0);
         lblErrRecipients.Size = new Size(668, 15);
-        lblErrRecipients.TabIndex = 2;
+        lblErrRecipients.TabIndex = 3;
         // 
         // panelSubject
         // 
@@ -638,7 +882,7 @@ partial class Form1
         Controls.Add(panelRoot);
         Font = UiTheme.BodyFont;
         MinimumSize = new Size(900, 640);
-        Name = "Form1";
+        Name = "Sender App";
         StartPosition = FormStartPosition.CenterScreen;
         Text = "Bulk Email Sender";
         panelRoot.ResumeLayout(false);
@@ -659,12 +903,24 @@ partial class Form1
         panelSenderEmail.PerformLayout();
         panelPassword.ResumeLayout(false);
         panelPassword.PerformLayout();
+        panelAttachments.ResumeLayout(false);
+        panelAttachments.PerformLayout();
+        panelAttachmentsHeader.ResumeLayout(false);
+        panelAttachmentsHeader.PerformLayout();
+        panelAttachmentButtons.ResumeLayout(false);
+        panelAttachmentButtons.PerformLayout();
         cardMessage.ResumeLayout(false);
         headerMessage.ResumeLayout(false);
         headerMessage.PerformLayout();
         layoutMessage.ResumeLayout(false);
         panelRecipients.ResumeLayout(false);
         panelRecipients.PerformLayout();
+        panelRecipientsHeader.ResumeLayout(false);
+        panelRecipientsHeader.PerformLayout();
+        panelWhatsAppImport.ResumeLayout(false);
+        panelWhatsAppToolbar.ResumeLayout(false);
+        panelWhatsAppToolbar.PerformLayout();
+        panelWhatsAppStatus.ResumeLayout(false);
         panelSubject.ResumeLayout(false);
         panelSubject.PerformLayout();
         panelBody.ResumeLayout(false);
@@ -704,13 +960,32 @@ partial class Form1
     private TextBox txtPassword;
     private Label lblErrPassword;
     private CheckBox chkUseSslTls;
+    private Panel panelAttachments;
+    private Panel panelAttachmentsHeader;
+    private Label lblAttachmentsTitle;
+    private Label lblAttachmentCount;
+    private FlowLayoutPanel panelAttachmentButtons;
+    private Button btnAddFiles;
+    private Button btnRemoveSelected;
+    private Button btnClearAttachments;
+    private ListView listViewAttachments;
+    private Label lblErrAttachments;
     private CardPanel cardMessage;
     private Panel headerMessage;
     private Label lblMessageIcon;
     private Label lblMessageTitle;
     private TableLayoutPanel layoutMessage;
     private Panel panelRecipients;
+    private Panel panelRecipientsHeader;
     private Label lblRecipients;
+    private Panel panelWhatsAppImport;
+    private FlowLayoutPanel panelWhatsAppToolbar;
+    private Button btnImportWhatsApp;
+    private CheckBox chkWhatsAppRemoveDuplicates;
+    private CheckBox chkWhatsAppAppendRecipients;
+    private Panel panelWhatsAppStatus;
+    private Label lblWhatsAppFileName;
+    private Label lblWhatsAppEmailCount;
     private TextBox txtRecipients;
     private Label lblErrRecipients;
     private Panel panelSubject;

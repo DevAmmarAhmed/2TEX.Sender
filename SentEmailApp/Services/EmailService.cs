@@ -27,29 +27,56 @@ public sealed class EmailService
    * and TLS requirements in their help documentation.
    */
 
-  public async Task SendAsync(
+  public Task SendAsync(
     SmtpSettings settings,
     string subject,
     string body,
     IEnumerable<string> recipients,
+    CancellationToken cancellationToken = default) =>
+    SendAsync(settings, new EmailMessage
+    {
+      Subject = subject,
+      Body = body,
+      To = recipients.ToList()
+    }, cancellationToken);
+
+  public async Task SendAsync(
+    SmtpSettings settings,
+    EmailMessage email,
     CancellationToken cancellationToken = default)
   {
     ArgumentNullException.ThrowIfNull(settings);
-    ArgumentException.ThrowIfNullOrWhiteSpace(subject);
-    ArgumentException.ThrowIfNullOrWhiteSpace(body);
+    ArgumentNullException.ThrowIfNull(email);
+    ArgumentException.ThrowIfNullOrWhiteSpace(email.Subject);
+    ArgumentException.ThrowIfNullOrWhiteSpace(email.Body);
 
-    var recipientList = recipients.ToList();
-    if (recipientList.Count == 0)
-      throw new ArgumentException("At least one recipient is required.", nameof(recipients));
+    var toRecipients = email.To.ToList();
+    if (toRecipients.Count == 0)
+      throw new ArgumentException("At least one recipient is required.", nameof(email));
 
     var message = new MimeMessage();
     message.From.Add(MailboxAddress.Parse(settings.SenderEmail));
 
-    foreach (var recipient in recipientList)
+    foreach (var recipient in toRecipients)
       message.To.Add(MailboxAddress.Parse(recipient));
 
-    message.Subject = subject;
-    message.Body = new TextPart("plain") { Text = body };
+    foreach (var cc in email.Cc)
+      message.Cc.Add(MailboxAddress.Parse(cc));
+
+    foreach (var bcc in email.Bcc)
+      message.Bcc.Add(MailboxAddress.Parse(bcc));
+
+    message.Subject = email.Subject;
+
+    var bodyBuilder = new BodyBuilder
+    {
+      TextBody = email.Body
+    };
+
+    foreach (var attachmentPath in email.AttachmentPaths)
+      bodyBuilder.Attachments.Add(attachmentPath);
+
+    message.Body = bodyBuilder.ToMessageBody();
 
     var secureSocketOptions = settings.UseSslTls
       ? (settings.Port == 465 ? SecureSocketOptions.SslOnConnect : SecureSocketOptions.StartTls)

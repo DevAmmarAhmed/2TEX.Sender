@@ -70,4 +70,17 @@ internal static class UiTheme
         label.Margin = new Padding(0, 2, 0, 0);
         label.Visible = false;
     }
+
+    public static void StyleSecondaryButton(Button button)
+    {
+        button.FlatStyle = FlatStyle.Flat;
+        button.Font = UiTheme.HintFont;
+        button.ForeColor = UiTheme.TextSecondary;
+        button.BackColor = Color.FromArgb(249, 250, 251);
+        button.FlatAppearance.BorderColor = UiTheme.InputBorder;
+        button.FlatAppearance.BorderSize = 1;
+        button.Height = 28;
+        button.Padding = new Padding(8, 0, 8, 0);
+        button.Cursor = Cursors.Hand;
+    }
 }
