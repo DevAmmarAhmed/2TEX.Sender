@@ -284,6 +284,7 @@ partial class Form1
         txtSmtpServer.PlaceholderText = "smtp.gmail.com";
         txtSmtpServer.Size = new Size(284, 23);
         txtSmtpServer.TabIndex = 1;
+        txtSmtpServer.Text = "smtp.gmail.com";
         UiTheme.StyleInput(txtSmtpServer);
         // 
         // lblErrSmtpServer
